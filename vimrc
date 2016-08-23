@@ -24,7 +24,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/syntastic'
 Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+"Plugin 'xolox/vim-easytags'
 Plugin 'majutsushi/tagbar'
 Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
@@ -34,9 +34,10 @@ Plugin 'vim-scripts/a.vim'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
+Plugin 'honza/vim-snippets'
 
 " ----- Working with Git ----------------------------------------------
-Plugin 'airblade/vim-gitgutter'
+" Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 
 " ----- Other text editing features -----------------------------------
@@ -54,6 +55,7 @@ Plugin 'kchmck/vim-coffee-script'
 " ----- Symfony Stuffs ------------------------------------------------
 
 Plugin 'nelsyeung/twig.vim'
+Plugin 'sniphpets/sniphpets-symfony'
 
 " ---- Extras/Advanced plugins ----------------------------------------
 " Highlight and strip trailing whitespace
@@ -71,6 +73,28 @@ Plugin 'nelsyeung/twig.vim'
 "Plugin 'digitaltoad/vim-jade'
 "Plugin 'tpope/vim-liquid'
 "Plugin 'cakebaker/scss-syntax.vim'
+
+" ---- Vdebug --------------------------------------------------------
+Plugin 'joonty/vdebug'
+
+" ---- PHP Extended Autocomplete -------------------------------------
+
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/unite.vim'
+Plugin 'shawncplus/phpcomplete.vim'
+Bundle 'arnaud-lb/vim-php-namespace'
+
+" ---- Capture -------------------------------------------------------
+
+Plugin 'tyru/capture.vim'
+
+" ---- ctags ---------------------------------------------------------
+
+Plugin 'craigemery/vim-autotag'
+
+"---- PHPQA Tools ----------------------------------------------------
+
+" Bundle 'joonty/vim-phpqa.git'
 
 call vundle#end()
 
@@ -137,7 +161,7 @@ augroup END
 
 " ----- xolox/vim-easytags settings -----
 " Where to look for tags files
-set tags=./tags;,~/.vimtags
+set tags+=.ctags_vendor,.ctags;
 " Sensible defaults
 let g:easytags_events = ['BufReadPost', 'BufWritePost']
 let g:easytags_async = 1
@@ -155,6 +179,10 @@ nmap <silent> <leader>b :TagbarToggle<CR>
 " ----- airblade/vim-gitgutter settings -----
 " Required after having changed the colorscheme
 hi clear SignColumn
+" Disable sign as it conflicts with vim-php-namespace
+let g:gitgutter_signs = 0
+" turn on line highligthing instead
+let g:gitgutter_highlight_lines = 1
 " In vim-airline, only display "hunks" if the diff is non-zero
 let g:airline#extensions#hunks#non_zero_only = 1
 
@@ -188,3 +216,34 @@ func! DeleteTrailingWS()
 endfunc
 
 " autocmd BufEnter * silent! call DeleteTrailingWS()
+
+let g:vdebug_options = {}
+let g:vdebug_options["port"] = 9000
+
+" Split preferences
+set splitright
+set splitbelow
+
+" Import class PHP
+function! IPhpInsertUse()
+   call PhpInsertUse()
+   call feedkeys('a',  'n')
+endfunction
+autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
+autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
+
+" Expand class PHP
+function! IPhpExpandClass()
+  call PhpExpandClass()
+  call feedkeys('a', 'n')
+endfunction
+autocmd FileType php inoremap <Leader>e <Esc>:call IPhpExpandClass()<CR>
+autocmd FileType php noremap <Leader>e :call PhpExpandClass()<CR>
+
+filetype plugin on
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+
+let g:phpcomplete_parse_docblock_comments = 1
+let g:phpcomplete_index_composer_command="composer"
+let g:autotagExcludeSuffixes="--exclude=app/cache --exclude=bin --exclude=web --exclude=.git"
+let g:autotagCtagsCmd="phpctags"
