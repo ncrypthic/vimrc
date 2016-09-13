@@ -1,8 +1,5 @@
 " File: .vimrc
-" Author: Jake Zimmerman <jake@zimmerman.io>
-"
-" How I configure Vim :P
-"
+" Author: Lim Afriyadi <lim.afriyadi.id@gmail.com
 
 " Gotta be first
 set nocompatible
@@ -100,6 +97,10 @@ Plugin 'adoy/vim-php-refactoring-toolbox'
 "---- PHPQA Tools ----------------------------------------------------
 
 " Bundle 'joonty/vim-phpqa.git'
+
+"---- Scala Support --------------------------------------------------
+
+Plugin 'derekwyatt/vim-scala'
 
 call vundle#end()
 
