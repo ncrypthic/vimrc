@@ -24,8 +24,8 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/syntastic'
 Plugin 'xolox/vim-misc'
-"Plugin 'xolox/vim-easytags'
 Plugin 'majutsushi/tagbar'
+Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
 
@@ -37,6 +37,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 
 " ----- Working with Git ----------------------------------------------
+
 " Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 
@@ -59,13 +60,13 @@ Plugin 'sniphpets/sniphpets-symfony'
 
 " ---- Extras/Advanced plugins ----------------------------------------
 " Highlight and strip trailing whitespace
-"Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'ntpeters/vim-better-whitespace'
 " Easily surround chunks of text
 "Plugin 'tpope/vim-surround'
 " Align CSV files at commas, align Markdown tables, and more
 "Plugin 'godlygeek/tabular'
 " Automaticall insert the closing HTML tag
-"Plugin 'HTML-AutoCloseTag'
+Plugin 'HTML-AutoCloseTag'
 " Make tmux look like vim-airline (read README for extra instructions)
 "Plugin 'edkolev/tmuxline.vim'
 " All the other syntax plugins I use
@@ -86,11 +87,15 @@ Bundle 'arnaud-lb/vim-php-namespace'
 
 " ---- Capture -------------------------------------------------------
 
-Plugin 'tyru/capture.vim'
+" Plugin 'tyru/capture.vim'
 
 " ---- ctags ---------------------------------------------------------
 
 Plugin 'craigemery/vim-autotag'
+
+"---- PHP Refactor ---------------------------------------------------
+
+Plugin 'adoy/vim-php-refactoring-toolbox'
 
 "---- PHPQA Tools ----------------------------------------------------
 
@@ -173,7 +178,7 @@ let g:easytags_suppress_ctags_warning = 1
 " Open/close tagbar with \b
 nmap <silent> <leader>b :TagbarToggle<CR>
 " Uncomment to open tagbar automatically whenever possible
-"autocmd BufEnter * nested :call tagbar#autoopen(0)
+autocmd BufEnter * nested :call tagbar#autoopen(0)
 
 
 " ----- airblade/vim-gitgutter settings -----
@@ -245,5 +250,18 @@ autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
 let g:phpcomplete_parse_docblock_comments = 1
 let g:phpcomplete_index_composer_command="composer"
+let g:autotagTagsFile=".ctags"
 let g:autotagExcludeSuffixes="--exclude=app/cache --exclude=bin --exclude=web --exclude=.git"
-let g:autotagCtagsCmd="phpctags"
+let g:autotagCtagsCmd="phpctags -kinds=+cif"
+let g:tagbar_phpctags_bin='/usr/local/bin/phpctags'
+
+" Hide modified buffer
+set hidden
+" Buffer shortcuts
+inoremap <Leader>g <ESC>:e#<CR>
+nnoremap <Leader>g :e#<CR>
+inoremap <Leader>b <ESC>:b#<CR>
+nnoremap <Leader>b :b#<CR>
+
+set complete-=i
+set directory=~/.vim/swap
