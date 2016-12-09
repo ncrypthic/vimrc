@@ -100,7 +100,12 @@ Plugin 'adoy/vim-php-refactoring-toolbox'
 
 "---- Scala Support --------------------------------------------------
 
-Plugin 'derekwyatt/vim-scala'
+"" Plugin 'derekwyatt/vim-scala'
+
+"---- React Support --------------------------------------------------
+
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 
 call vundle#end()
 
@@ -128,6 +133,8 @@ set background=dark
 "let g:solarized_termcolors=256
 
 " Set the colorscheme
+let g:solarized_contrast="low"
+lef g:solarized_termtrans=1
 colorscheme solarized
 
 
@@ -167,7 +174,7 @@ augroup END
 
 " ----- xolox/vim-easytags settings -----
 " Where to look for tags files
-set tags+=.ctags_vendor,.ctags;
+set tags=.ctags_vendor,.ctags;
 " Sensible defaults
 let g:easytags_events = ['BufReadPost', 'BufWritePost']
 let g:easytags_async = 1
