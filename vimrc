@@ -107,6 +107,13 @@ Plugin 'adoy/vim-php-refactoring-toolbox'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 
+"---- Go Suppport ----------------------------------------------------
+
+Plugin 'fatih/vim-go'
+
+"---- Direnv Suppport ------------------------------------------------
+Plugin 'direnv/direnv.vim'
+
 call vundle#end()
 
 filetype plugin indent on
