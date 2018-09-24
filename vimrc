@@ -2,6 +2,8 @@
 " Author: Lim Afriyadi <lim.afriyadi.id@gmail.com
 
 " Gotta be first
+"scriptencoding utf-8
+"set encoding=utf-8
 set nocompatible
 
 filetype off
@@ -22,7 +24,7 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/syntastic'
 Plugin 'xolox/vim-misc'
 Plugin 'majutsushi/tagbar'
-Plugin 'vim-php/tagbar-phpctags.vim'
+" Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
 
@@ -67,17 +69,20 @@ Plugin 'HTML-AutoCloseTag'
 " Make tmux look like vim-airline (read README for extra instructions)
 "Plugin 'edkolev/tmuxline.vim'
 " All the other syntax plugins I use
-"Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'ekalinin/Dockerfile.vim'
 "Plugin 'digitaltoad/vim-jade'
 "Plugin 'tpope/vim-liquid'
-"Plugin 'cakebaker/scss-syntax.vim'
+Plugin 'cakebaker/scss-syntax.vim'
 
 " ---- Vdebug --------------------------------------------------------
 Plugin 'joonty/vdebug'
 
+" ---- Shell integration ---------------------------------------------
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimshell'
+
 " ---- PHP Extended Autocomplete -------------------------------------
 
-Bundle 'Shougo/vimproc'
 Bundle 'Shougo/unite.vim'
 Plugin 'shawncplus/phpcomplete.vim'
 Bundle 'arnaud-lb/vim-php-namespace'
@@ -88,11 +93,11 @@ Bundle 'arnaud-lb/vim-php-namespace'
 
 " ---- ctags ---------------------------------------------------------
 
-Plugin 'craigemery/vim-autotag'
+" Plugin 'craigemery/vim-autotag'
 
 "---- PHP Refactor ---------------------------------------------------
 
-Plugin 'adoy/vim-php-refactoring-toolbox'
+" Plugin 'adoy/vim-php-refactoring-toolbox'
 
 "---- PHPQA Tools ----------------------------------------------------
 
@@ -100,12 +105,20 @@ Plugin 'adoy/vim-php-refactoring-toolbox'
 
 "---- Scala Support --------------------------------------------------
 
-"" Plugin 'derekwyatt/vim-scala'
+Plugin 'derekwyatt/vim-scala'
 
 "---- React Support --------------------------------------------------
 
-Plugin 'pangloss/vim-javascript'
+Plugin 'othree/yajs.vim'
 Plugin 'mxw/vim-jsx'
+
+"---- Go Suppport ----------------------------------------------------
+
+Plugin 'fatih/vim-go'
+Plugin 'sebdah/vim-delve'
+
+"---- Direnv Suppport ------------------------------------------------
+Plugin 'direnv/direnv.vim'
 
 call vundle#end()
 
@@ -120,6 +133,7 @@ set incsearch
 set hlsearch
 
 syntax on
+color solarized
 
 set mouse=a
 
@@ -135,7 +149,6 @@ set background=dark
 " Set the colorscheme
 let g:solarized_contrast="low"
 lef g:solarized_termtrans=1
-colorscheme solarized
 
 
 " ----- bling/vim-airline settings -----
@@ -174,7 +187,7 @@ augroup END
 
 " ----- xolox/vim-easytags settings -----
 " Where to look for tags files
-set tags=.ctags_vendor,.ctags;
+set tags=./tags;,tags;
 " Sensible defaults
 let g:easytags_events = ['BufReadPost', 'BufWritePost']
 let g:easytags_async = 1
@@ -184,9 +197,9 @@ let g:easytags_suppress_ctags_warning = 1
 
 " ----- majutsushi/tagbar settings -----
 " Open/close tagbar with \b
-nmap <silent> <leader>b :TagbarToggle<CR>
+" nmap <silent> <leader>b :TagbarToggle<CR>
 " Uncomment to open tagbar automatically whenever possible
-autocmd BufEnter * nested :call tagbar#autoopen(0)
+" autocmd BufEnter * nested :call tagbar#autoopen(0)
 
 
 " ----- airblade/vim-gitgutter settings -----
@@ -253,6 +266,15 @@ endfunction
 autocmd FileType php inoremap <Leader>e <Esc>:call IPhpExpandClass()<CR>
 autocmd FileType php noremap <Leader>e :call PhpExpandClass()<CR>
 
+" SearchInline
+function! SearchInline(word)
+  echo "Search inline for " . a:word
+  silent! execute "normal /\\%" . line('.') . "l" . a:word . "\<CR>"
+endfunction
+command -nargs=1 SearchInline :set nohlsearch|:silent call SearchInline(<f-args>)
+
+nnoremap <buffer> <Leader>a :call SearchInline(input("Keyword: "))<CR>
+
 filetype plugin on
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
@@ -273,3 +295,14 @@ nnoremap <Leader>b :b#<CR>
 
 set complete-=i
 set directory=~/.vim/swap
+
+" Ctrl-P config
+let g:ctrlp_working_path_mode='c'
+let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
+
+let g:go_bin_path="/home/dev/.usr/local/go/bin"
+
+" Golang config
+let $GOPATH="/home/dev/ssi-gopath-symlink"
+let $PATH=$PATH.":~/ssi-gopath-symlink/bin"
+let g:delve_backend = "native"
