@@ -27,6 +27,8 @@ Plugin 'majutsushi/tagbar'
 " Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
+Plugin 'diepm/vim-rest-console'
+Plugin 'autozimu/LanguageClient-neovim'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -83,9 +85,12 @@ Bundle 'Shougo/vimshell'
 
 " ---- PHP Extended Autocomplete -------------------------------------
 
-Bundle 'Shougo/unite.vim'
-Plugin 'shawncplus/phpcomplete.vim'
-Bundle 'arnaud-lb/vim-php-namespace'
+" Plugin 'shawncplus/phpcomplete.vim'
+" Bundle 'arnaud-lb/vim-php-namespace'
+Plugin 'Shougo/unite.vim'
+Plugin 'phpactor/phpactor'
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'kristijanhusak/deoplete-phpactor'
 
 " ---- Capture -------------------------------------------------------
 
@@ -224,6 +229,20 @@ augroup mydelimitMate
 augroup END
 
 " ---- Custom settings --------------------
+" Delve settings
+let g:delve_enable_syntax_highlighting=1
+let g:delve_new_command="new"
+
+" ---------- 'autozimu/LanguageClient-neovim' --------------
+let g:LanguageClient_serverCommands = {
+      \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+      \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
+      \ 'python': ['pyls'],
+      \ 'cpp': ['clangd'],
+      \ 'go': ['gopls'],
+      \ }
+
+let g:LanguageClient_autoStart = 1
 
 " Folding method
 set foldmethod=indent
@@ -250,22 +269,6 @@ let g:vdebug_options["port"] = 9000
 set splitright
 set splitbelow
 
-" Import class PHP
-function! IPhpInsertUse()
-   call PhpInsertUse()
-   call feedkeys('a',  'n')
-endfunction
-autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
-autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
-
-" Expand class PHP
-function! IPhpExpandClass()
-  call PhpExpandClass()
-  call feedkeys('a', 'n')
-endfunction
-autocmd FileType php inoremap <Leader>e <Esc>:call IPhpExpandClass()<CR>
-autocmd FileType php noremap <Leader>e :call PhpExpandClass()<CR>
-
 " SearchInline
 function! SearchInline(word)
   echo "Search inline for " . a:word
@@ -276,14 +279,9 @@ command -nargs=1 SearchInline :set nohlsearch|:silent call SearchInline(<f-args>
 nnoremap <buffer> <Leader>a :call SearchInline(input("Keyword: "))<CR>
 
 filetype plugin on
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
-let g:phpcomplete_parse_docblock_comments = 1
-let g:phpcomplete_index_composer_command="composer"
 let g:autotagTagsFile=".ctags"
 let g:autotagExcludeSuffixes="--exclude=app/cache --exclude=bin --exclude=web --exclude=.git"
-let g:autotagCtagsCmd="phpctags -kinds=+cif"
-let g:tagbar_phpctags_bin='/usr/local/bin/phpctags'
 
 " Hide modified buffer
 set hidden
@@ -299,10 +297,3 @@ set directory=~/.vim/swap
 " Ctrl-P config
 let g:ctrlp_working_path_mode='c'
 let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
-
-let g:go_bin_path="/home/dev/.usr/local/go/bin"
-
-" Golang config
-let $GOPATH="/home/dev/ssi-gopath-symlink"
-let $PATH=$PATH.":~/ssi-gopath-symlink/bin"
-let g:delve_backend = "native"
