@@ -41,6 +41,7 @@ Plugin 'honza/vim-snippets'
 
 " Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-commentary'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
@@ -91,6 +92,8 @@ Plugin 'Shougo/unite.vim'
 Plugin 'phpactor/phpactor'
 Plugin 'Shougo/deoplete.nvim'
 Plugin 'kristijanhusak/deoplete-phpactor'
+Plugin 'roxma/nvim-yarp'
+Plugin 'roxma/vim-hug-neovim-rpc'
 
 " ---- Capture -------------------------------------------------------
 
@@ -119,7 +122,7 @@ Plugin 'mxw/vim-jsx'
 
 "---- Go Suppport ----------------------------------------------------
 
-Plugin 'fatih/vim-go'
+"Plugin 'fatih/vim-go'
 Plugin 'sebdah/vim-delve'
 
 "---- Direnv Suppport ------------------------------------------------
@@ -211,9 +214,9 @@ let g:easytags_suppress_ctags_warning = 1
 " Required after having changed the colorscheme
 hi clear SignColumn
 " Disable sign as it conflicts with vim-php-namespace
-let g:gitgutter_signs = 0
+" let g:gitgutter_signs = 0
 " turn on line highligthing instead
-let g:gitgutter_highlight_lines = 1
+" let g:gitgutter_highlight_lines = 1
 " In vim-airline, only display "hunks" if the diff is non-zero
 let g:airline#extensions#hunks#non_zero_only = 1
 
@@ -291,9 +294,10 @@ nnoremap <Leader>g :e#<CR>
 inoremap <Leader>b <ESC>:b#<CR>
 nnoremap <Leader>b :b#<CR>
 
-set complete-=i
 set directory=~/.vim/swap
 
 " Ctrl-P config
 let g:ctrlp_working_path_mode='c'
 let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
+
+let g:deoplete#enable_at_startup = 1
