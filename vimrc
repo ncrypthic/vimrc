@@ -17,18 +17,19 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tomasr/molokai'
 Plugin 'bling/vim-airline'
+Plugin 'jlanzarotta/bufexplorer'
 
 " ----- Vim as a programmer's text editor -----------------------------
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'scrooloose/syntastic'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'xolox/vim-misc'
 Plugin 'majutsushi/tagbar'
-" Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
 Plugin 'diepm/vim-rest-console'
 Plugin 'autozimu/LanguageClient-neovim'
+Plugin 'Shougo/echodoc'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -39,12 +40,13 @@ Plugin 'honza/vim-snippets'
 
 " ----- Working with Git ----------------------------------------------
 
-" Plugin 'airblade/vim-gitgutter'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
+Plugin 'junegunn/fzf.vim'
 
 " ----- man pages, tmux -----------------------------------------------
 Plugin 'jez/vim-superman'
@@ -86,12 +88,12 @@ Bundle 'Shougo/vimshell'
 
 " ---- PHP Extended Autocomplete -------------------------------------
 
-" Plugin 'shawncplus/phpcomplete.vim'
-" Bundle 'arnaud-lb/vim-php-namespace'
-Plugin 'Shougo/unite.vim'
+Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'phpactor/phpactor'
-Plugin 'Shougo/deoplete.nvim'
 Plugin 'kristijanhusak/deoplete-phpactor'
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'deoplete-plugins/deoplete-jedi'
 Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
 
@@ -122,7 +124,7 @@ Plugin 'mxw/vim-jsx'
 
 "---- Go Suppport ----------------------------------------------------
 
-"Plugin 'fatih/vim-go'
+Plugin 'fatih/vim-go'
 Plugin 'sebdah/vim-delve'
 
 "---- Direnv Suppport ------------------------------------------------
@@ -141,15 +143,17 @@ set incsearch
 set hlsearch
 
 syntax on
-color solarized
+set background=dark
+colorscheme solarized
 
 set mouse=a
+set updatetime=100
+set rtp+=/usr/local/opt/fzf
 
 " ----- Plugin-Specific Settings --------------------------------------
 
 " ----- altercation/vim-colors-solarized settings -----
 " Toggle this to "light" for light colorscheme
-set background=dark
 
 " Uncomment the next line if your terminal is not configured for solarized
 "let g:solarized_termcolors=256
@@ -158,6 +162,8 @@ set background=dark
 let g:solarized_contrast="low"
 lef g:solarized_termtrans=1
 
+" ----- fugitive settings --------------
+nmap <leader>gpb  :execute ":Gpush origin " . fugitive#head(0)<CR>
 
 " ----- bling/vim-airline settings -----
 " Always show statusbar
@@ -184,15 +190,6 @@ nmap <silent> <leader>t :NERDTreeTabsToggle<CR>
 let g:nerdtree_tabs_open_on_console_startup = 0
 
 
-" ----- scrooloose/syntastic settings -----
-let g:syntastic_error_symbol = '✘'
-let g:syntastic_warning_symbol = "▲"
-augroup mySyntastic
-  au!
-  au FileType tex let b:syntastic_mode = "passive"
-augroup END
-
-
 " ----- xolox/vim-easytags settings -----
 " Where to look for tags files
 set tags=./tags;,tags;
@@ -214,11 +211,12 @@ let g:easytags_suppress_ctags_warning = 1
 " Required after having changed the colorscheme
 hi clear SignColumn
 " Disable sign as it conflicts with vim-php-namespace
-" let g:gitgutter_signs = 0
+" let g:gitgutter_signs_priority = 0
 " turn on line highligthing instead
 " let g:gitgutter_highlight_lines = 1
 " In vim-airline, only display "hunks" if the diff is non-zero
 let g:airline#extensions#hunks#non_zero_only = 1
+let g:gitgutter_sign_priority = 0
 
 
 " ----- Raimondi/delimitMate settings -----
@@ -240,7 +238,7 @@ let g:delve_new_command="new"
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
       \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-      \ 'python': ['pyls'],
+      \ 'python': ['/usr/local/bin/pyls'],
       \ 'cpp': ['clangd'],
       \ 'go': ['gopls'],
       \ }
@@ -301,3 +299,17 @@ let g:ctrlp_working_path_mode='c'
 let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
 
 let g:deoplete#enable_at_startup = 1
+
+" vim-rest-console settings
+let g:vrc_curl_opts = {
+  \ '-sS': '',
+  \ '--connect-timeout': 10,
+  \ '-i': '',
+  \ '--max-time': 60,
+  \ '-k': '',
+\}
+
+" Echodoc
+set cmdheight=2
+set signcolumn=yes
+let g:echodoc_enable_at_startup = 1

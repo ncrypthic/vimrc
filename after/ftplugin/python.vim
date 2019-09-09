@@ -1,7 +1,7 @@
 setlocal omnifunc=LanguageClient#Complete
 let deoplete#enable_at_startup=1
 call deoplete#custom#option('source', {
-            \ 'go': ['LanguageClient']
+            \ 'python': ['LanguageClient']
             \ })
 call deoplete#custom#source('LanguageClient',
             \ 'min_pattern_length',
