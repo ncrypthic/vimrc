@@ -1,14 +1,14 @@
-setlocal omnifunc=LanguageClient#Complete
-let deoplete#enable_at_startup=1
-call deoplete#custom#option('source', {
-            \ 'go': ['LanguageClient']
-            \ })
-call deoplete#custom#source('LanguageClient',
-            \ 'min_pattern_length',
-            \ 2)
-if !exists('g:deoplete#omni#input_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
+" setlocal omnifunc=LanguageClient#Complete
+" let deoplete#enable_at_startup=1
+" call deoplete#custom#option('source', {
+"             \ 'go': ['LanguageClient']
+"             \ })
+" call deoplete#custom#source('LanguageClient',
+"             \ 'min_pattern_length',
+"             \ 2)
+" if !exists('g:deoplete#omni#input_patterns')
+"   let g:deoplete#omni#input_patterns = {}
+" endif
 
 " Invoke the context menu
 nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
@@ -17,5 +17,3 @@ nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
 
 " Comment char
 setlocal commentstring=\/\/\ %s
-
-setlocal completeopt=longest,menuone

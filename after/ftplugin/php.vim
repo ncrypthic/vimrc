@@ -1,6 +1,3 @@
-setlocal omnifunc=phpactor#Complete
-
-
 " Include use statement
 nmap <Leader>u :call phpactor#UseAdd()<CR>
 

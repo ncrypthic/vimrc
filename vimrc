@@ -30,6 +30,7 @@ Plugin 'vim-scripts/a.vim'
 Plugin 'diepm/vim-rest-console'
 Plugin 'autozimu/LanguageClient-neovim'
 Plugin 'Shougo/echodoc'
+Plugin 'dense-analysis/ale'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -46,6 +47,7 @@ Plugin 'tpope/vim-commentary'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
 " ----- man pages, tmux -----------------------------------------------
@@ -93,7 +95,6 @@ Plugin 'phpactor/phpactor'
 Plugin 'kristijanhusak/deoplete-phpactor'
 Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/deoplete.nvim'
-Plugin 'deoplete-plugins/deoplete-jedi'
 Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
 
@@ -129,6 +130,9 @@ Plugin 'sebdah/vim-delve'
 
 "---- Direnv Suppport ------------------------------------------------
 Plugin 'direnv/direnv.vim'
+
+"---- Python Support -------------------------------------------------
+Plugin 'nvie/vim-flake8'
 
 call vundle#end()
 
@@ -238,7 +242,7 @@ let g:delve_new_command="new"
 let g:LanguageClient_serverCommands = {
       \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
       \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-      \ 'python': ['/usr/local/bin/pyls'],
+      \ 'python': ['/home/dev/.local/bin/pyls'],
       \ 'cpp': ['clangd'],
       \ 'go': ['gopls'],
       \ }
@@ -301,6 +305,10 @@ let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gi
 let g:deoplete#enable_at_startup = 1
 
 " vim-rest-console settings
+let g:vrc_auto_format_response_patterns = {
+  \ 'json': 'python3 -m json.tool',
+  \ 'xml': 'xmllint --format -',
+\}
 let g:vrc_curl_opts = {
   \ '-sS': '',
   \ '--connect-timeout': 10,
@@ -313,3 +321,14 @@ let g:vrc_curl_opts = {
 set cmdheight=2
 set signcolumn=yes
 let g:echodoc_enable_at_startup = 1
+
+" ale
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace']
+\}
+let g:airline#extensions#ale#enabled = 1
+
+" deoplete
+set completeopt=noinsert,menuone,noselect
+let g:deoplete#enable_at_startup = 1
+set completefunc=LanguageClient#complete
