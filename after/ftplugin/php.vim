@@ -28,4 +28,5 @@ vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
 " Extract method from selection
 vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
 
-let g:phpactorOmniError = v:true
+" let g:phpactorOmniError = v:true
+" let g:phpactorOmniAutoClassImport = v:true

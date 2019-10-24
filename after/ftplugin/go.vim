@@ -11,7 +11,7 @@
 " endif
 
 " Invoke the context menu
-nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
+" nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
 " Run gofmt on save
 "autocmd BufWritePre *.go :call LanguageClient#textDocument_formatting_sync()
 

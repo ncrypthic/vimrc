@@ -31,6 +31,7 @@ Plugin 'diepm/vim-rest-console'
 Plugin 'autozimu/LanguageClient-neovim'
 Plugin 'Shougo/echodoc'
 Plugin 'dense-analysis/ale'
+Plugin 'neoclide/coc.nvim'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -90,11 +91,8 @@ Bundle 'Shougo/vimshell'
 
 " ---- PHP Extended Autocomplete -------------------------------------
 
-Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'phpactor/phpactor'
-Plugin 'kristijanhusak/deoplete-phpactor'
 Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/deoplete.nvim'
 Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
 
@@ -134,6 +132,9 @@ Plugin 'direnv/direnv.vim'
 "---- Python Support -------------------------------------------------
 Plugin 'nvie/vim-flake8'
 
+"---- Python Support -------------------------------------------------
+Plugin 'reasonml-editor/vim-reason-plus'
+
 call vundle#end()
 
 filetype plugin indent on
@@ -151,10 +152,47 @@ set background=dark
 colorscheme solarized
 
 set mouse=a
-set updatetime=100
+set updatetime=300
+set shortmess+=c
 set rtp+=/usr/local/opt/fzf
 
 " ----- Plugin-Specific Settings --------------------------------------
+" coc.nvim settings
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " ----- altercation/vim-colors-solarized settings -----
 " Toggle this to "light" for light colorscheme
@@ -238,17 +276,6 @@ augroup END
 let g:delve_enable_syntax_highlighting=1
 let g:delve_new_command="new"
 
-" ---------- 'autozimu/LanguageClient-neovim' --------------
-let g:LanguageClient_serverCommands = {
-      \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-      \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-      \ 'python': ['/home/dev/.local/bin/pyls'],
-      \ 'cpp': ['clangd'],
-      \ 'go': ['gopls'],
-      \ }
-
-let g:LanguageClient_autoStart = 1
-
 " Folding method
 set foldmethod=indent
 
@@ -302,8 +329,6 @@ set directory=~/.vim/swap
 let g:ctrlp_working_path_mode='c'
 let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
 
-let g:deoplete#enable_at_startup = 1
-
 " vim-rest-console settings
 let g:vrc_auto_format_response_patterns = {
   \ 'json': 'python3 -m json.tool',
@@ -328,7 +353,4 @@ let g:ale_fixers = {
 \}
 let g:airline#extensions#ale#enabled = 1
 
-" deoplete
-set completeopt=noinsert,menuone,noselect
-let g:deoplete#enable_at_startup = 1
-set completefunc=LanguageClient#complete
+nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
