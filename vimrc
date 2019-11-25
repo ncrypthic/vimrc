@@ -14,7 +14,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " ----- Making Vim look good ------------------------------------------
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'lifepillar/vim-solarized8'
 Plugin 'tomasr/molokai'
 Plugin 'bling/vim-airline'
 Plugin 'jlanzarotta/bufexplorer'
@@ -32,6 +32,7 @@ Plugin 'autozimu/LanguageClient-neovim'
 Plugin 'Shougo/echodoc'
 Plugin 'dense-analysis/ale'
 Plugin 'neoclide/coc.nvim'
+Plugin 'liuchengxu/vista.vim'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -149,7 +150,8 @@ set hlsearch
 
 syntax on
 set background=dark
-colorscheme solarized
+set termguicolors
+colorscheme solarized8_high
 
 set mouse=a
 set updatetime=300
@@ -194,15 +196,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" ----- altercation/vim-colors-solarized settings -----
-" Toggle this to "light" for light colorscheme
+highlight CocHighlightText guibg=#777777 guifg=#ffff00
 
-" Uncomment the next line if your terminal is not configured for solarized
-"let g:solarized_termcolors=256
-
-" Set the colorscheme
-let g:solarized_contrast="low"
-lef g:solarized_termtrans=1
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " ----- fugitive settings --------------
 nmap <leader>gpb  :execute ":Gpush origin " . fugitive#head(0)<CR>
@@ -242,20 +238,12 @@ let g:easytags_dynamic_files = 2
 let g:easytags_resolve_links = 1
 let g:easytags_suppress_ctags_warning = 1
 
-" ----- majutsushi/tagbar settings -----
-" Open/close tagbar with \b
-" nmap <silent> <leader>b :TagbarToggle<CR>
-" Uncomment to open tagbar automatically whenever possible
-" autocmd BufEnter * nested :call tagbar#autoopen(0)
+" ----- liuchengxu/vista.vim settings -----
+let g:vista_default_executive = 'coc'
+nmap <silent> <leader>b :Vista!!<CR>
 
 
 " ----- airblade/vim-gitgutter settings -----
-" Required after having changed the colorscheme
-hi clear SignColumn
-" Disable sign as it conflicts with vim-php-namespace
-" let g:gitgutter_signs_priority = 0
-" turn on line highligthing instead
-" let g:gitgutter_highlight_lines = 1
 " In vim-airline, only display "hunks" if the diff is non-zero
 let g:airline#extensions#hunks#non_zero_only = 1
 let g:gitgutter_sign_priority = 0
@@ -320,8 +308,6 @@ set hidden
 " Buffer shortcuts
 inoremap <Leader>g <ESC>:e#<CR>
 nnoremap <Leader>g :e#<CR>
-inoremap <Leader>b <ESC>:b#<CR>
-nnoremap <Leader>b :b#<CR>
 
 set directory=~/.vim/swap
 
@@ -354,3 +340,4 @@ let g:ale_fixers = {
 let g:airline#extensions#ale#enabled = 1
 
 nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
+set foldmethod=manual
