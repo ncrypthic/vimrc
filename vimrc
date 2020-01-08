@@ -17,7 +17,6 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'tomasr/molokai'
 Plugin 'bling/vim-airline'
-Plugin 'jlanzarotta/bufexplorer'
 
 " ----- Vim as a programmer's text editor -----------------------------
 Plugin 'scrooloose/nerdtree'
@@ -49,7 +48,6 @@ Plugin 'tpope/vim-commentary'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
-Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
 " ----- man pages, tmux -----------------------------------------------
@@ -196,6 +194,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
 highlight CocHighlightText guibg=#777777 guifg=#ffff00
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -306,8 +307,11 @@ let g:autotagExcludeSuffixes="--exclude=app/cache --exclude=bin --exclude=web --
 " Hide modified buffer
 set hidden
 " Buffer shortcuts
+inoremap <Leader><TAB>  <ESC>:Buffers<CR>
+nnoremap <Leader><TAB>  :Buffers<CR>
 inoremap <Leader>g <ESC>:e#<CR>
 nnoremap <Leader>g :e#<CR>
+
 
 set directory=~/.vim/swap
 
