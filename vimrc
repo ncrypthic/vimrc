@@ -332,6 +332,27 @@ let g:vrc_curl_opts = {
   \ '-k': '',
 \}
 
+" ==== fzf.vim =============================================
+" FZF to checkout git branches, Usage: GCheckout
+function! s:open_branch_fzf(line)
+  let l:parser = split(a:line)
+  let l:branch = l:parser[0]
+  if l:branch ==? '*'
+    let l:branch = l:parser[1]
+  endif
+  execute '!git checkout ' . l:branch
+endfunction
+
+function! s:GCheckout(args) abort
+  if empty(a:args)
+    call fzf#vim#grep('git branch -v', 0, { 'sink': function('s:open_branch_fzf') })
+  else
+    execute '!git checkout' a:args
+  endif
+endfunction
+
+command! -bang -nargs=? Gco :execute s:GCheckout(<q-args>)
+
 " Echodoc
 set cmdheight=2
 set signcolumn=yes
