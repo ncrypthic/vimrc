@@ -33,6 +33,7 @@ Plugin 'Shougo/echodoc'
 Plugin 'dense-analysis/ale'
 Plugin 'neoclide/coc.nvim'
 Plugin 'liuchengxu/vista.vim'
+Plugin 'xolox/vim-notes'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -159,6 +160,10 @@ set shortmess+=c
 set rtp+=/usr/local/opt/fzf
 
 " ----- Plugin-Specific Settings --------------------------------------
+" Plugin 'xolox/vim-notes'
+"
+" let g:notes_directories=["~/notes"]
+
 " coc.nvim settings
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -167,6 +172,7 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -226,6 +232,7 @@ let g:airline#extensions#tabline#enabled = 1
 nmap <silent> <leader>t :NERDTreeTabsToggle<CR>
 " To have NERDTree always open on startup
 let g:nerdtree_tabs_open_on_console_startup = 0
+let g:NERDTreeChDirMode = 2
 
 
 " ----- xolox/vim-easytags settings -----
@@ -306,6 +313,8 @@ let g:autotagExcludeSuffixes="--exclude=app/cache --exclude=bin --exclude=web --
 " Hide modified buffer
 set hidden
 " Buffer shortcuts
+inoremap <Leader><TAB>  <ESC>:Buffers<CR>
+nnoremap <Leader><TAB>  :Buffers<CR>
 inoremap <Leader>g <ESC>:e#<CR>
 nnoremap <Leader>g :e#<CR>
 
@@ -313,6 +322,7 @@ set directory=~/.vim/swap
 
 " Ctrl-P config
 let g:ctrlp_working_path_mode='c'
+let g:ctrlp_cmd='CtrlPBuffer'
 let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
 
 " vim-rest-console settings
@@ -341,3 +351,41 @@ let g:airline#extensions#ale#enabled = 1
 
 nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
 set foldmethod=manual
+
+" ==== fzf.vim =============================================
+function! s:open_branch_fzf(line)
+  let l:parser = split(a:line)
+  let l:branch = l:parser[0]
+  if l:branch ==? '*'
+    let l:branch = l:parser[1]
+  endif
+  execute '!git checkout ' . l:branch
+endfunction
+
+function! s:GCheckout(args) abort
+  if empty(a:args)
+    call fzf#vim#grep('git branch -v', 0,{'sink': function('s:open_branch_fzf')},0)
+  else
+    execute '!git checkout' a:args
+  endif
+endfunction
+
+command! -bang -nargs=? Gco :execute s:GCheckout(<q-args>)
+
+" ------ vim-go -----------------------------------
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_types = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_highlight_variable_assignments = 1
+let g:go_highlight_function_parameters = 1
+
+set nobackup nowritebackup
+
+" Rogu
+function! s:Rogu(args) abort
+  execute ':terminal rogu' a:args
+endfunction
+
+com! -nargs=? Rg :execute s:Rogu(<q-args>)
