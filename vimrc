@@ -17,7 +17,6 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'tomasr/molokai'
 Plugin 'bling/vim-airline'
-Plugin 'jlanzarotta/bufexplorer'
 
 " ----- Vim as a programmer's text editor -----------------------------
 Plugin 'scrooloose/nerdtree'
@@ -50,7 +49,6 @@ Plugin 'tpope/vim-commentary'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
-Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
 " ----- man pages, tmux -----------------------------------------------
@@ -202,6 +200,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
 highlight CocHighlightText guibg=#777777 guifg=#ffff00
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -318,6 +319,7 @@ nnoremap <Leader><TAB>  :Buffers<CR>
 inoremap <Leader>g <ESC>:e#<CR>
 nnoremap <Leader>g :e#<CR>
 
+
 set directory=~/.vim/swap
 
 " Ctrl-P config
@@ -337,6 +339,27 @@ let g:vrc_curl_opts = {
   \ '--max-time': 60,
   \ '-k': '',
 \}
+
+" ==== fzf.vim =============================================
+" FZF to checkout git branches, Usage: GCheckout
+function! s:open_branch_fzf(line)
+  let l:parser = split(a:line)
+  let l:branch = l:parser[0]
+  if l:branch ==? '*'
+    let l:branch = l:parser[1]
+  endif
+  execute '!git checkout ' . l:branch
+endfunction
+
+function! s:GCheckout(args) abort
+  if empty(a:args)
+    call fzf#vim#grep('git branch -v', 0, { 'sink': function('s:open_branch_fzf') })
+  else
+    execute '!git checkout' a:args
+  endif
+endfunction
+
+command! -bang -nargs=? Gco :execute s:GCheckout(<q-args>)
 
 " Echodoc
 set cmdheight=2
