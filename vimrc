@@ -49,7 +49,10 @@ Plugin 'tpope/vim-commentary'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
+Plugin 'scrooloose/vim-slumlord'
+Plugin 'aklt/plantuml-syntax'
 
 " ----- man pages, tmux -----------------------------------------------
 Plugin 'jez/vim-superman'
@@ -155,7 +158,6 @@ colorscheme solarized8_high
 set mouse=a
 set updatetime=300
 set shortmess+=c
-set rtp+=/usr/local/opt/fzf
 
 " ----- Plugin-Specific Settings --------------------------------------
 " Plugin 'xolox/vim-notes'
