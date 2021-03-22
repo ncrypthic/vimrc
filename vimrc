@@ -24,15 +24,16 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'xolox/vim-misc'
 Plugin 'majutsushi/tagbar'
-Plugin 'kien/ctrlp.vim'
 Plugin 'vim-scripts/a.vim'
 Plugin 'diepm/vim-rest-console'
-Plugin 'autozimu/LanguageClient-neovim'
+"Plugin 'autozimu/LanguageClient-neovim'
 Plugin 'Shougo/echodoc'
 Plugin 'dense-analysis/ale'
 Plugin 'neoclide/coc.nvim'
 Plugin 'liuchengxu/vista.vim'
-Plugin 'xolox/vim-notes'
+Plugin 'neovimhaskell/haskell-vim'
+Plugin 'tpope/vim-speeddating'
+Plugin 'puremourning/vimspector'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -46,6 +47,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
+Plugin 'idanarye/vim-merginal'
 
 " ----- Other text editing features -----------------------------------
 Plugin 'Raimondi/delimitMate'
@@ -53,6 +55,8 @@ Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'scrooloose/vim-slumlord'
 Plugin 'aklt/plantuml-syntax'
+Plugin 'aserebryakov/vim-todo-lists'
+
 
 " ----- man pages, tmux -----------------------------------------------
 Plugin 'jez/vim-superman'
@@ -84,6 +88,7 @@ Plugin 'ekalinin/Dockerfile.vim'
 "Plugin 'digitaltoad/vim-jade'
 "Plugin 'tpope/vim-liquid'
 Plugin 'cakebaker/scss-syntax.vim'
+Plugin 'yazgoo/unicodemoji'
 
 " ---- Vdebug --------------------------------------------------------
 Plugin 'joonty/vdebug'
@@ -138,6 +143,16 @@ Plugin 'nvie/vim-flake8'
 "---- Python Support -------------------------------------------------
 Plugin 'reasonml-editor/vim-reason-plus'
 
+" --- Flutter Support ------------------------------------------------
+Plugin 'dart-lang/dart-vim-plugin'
+Plugin 'thosakwe/vim-flutter'
+
+" ---- Productivity Support ------------------------------------------
+
+Plugin 'jceb/vim-orgmode'
+Plugin 'xolox/vim-notes'
+Plugin 'dhruvasagar/vim-table-mode'
+
 call vundle#end()
 
 filetype plugin indent on
@@ -152,7 +167,8 @@ set hlsearch
 
 syntax on
 set background=dark
-set termguicolors
+"Enable this on iTerm2
+"set termguicolors
 colorscheme solarized8_high
 
 set mouse=a
@@ -204,6 +220,9 @@ nmap <silent> gr <Plug>(coc-references)
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
+
+" Map emoji
+nmap <leader>: :Unicodemoji<CR>
 
 highlight CocHighlightText guibg=#777777 guifg=#ffff00
 
@@ -322,12 +341,7 @@ inoremap <Leader>g <ESC>:e#<CR>
 nnoremap <Leader>g :e#<CR>
 
 
-set directory=~/.vim/swap
-
-" Ctrl-P config
-let g:ctrlp_working_path_mode='c'
-let g:ctrlp_cmd='CtrlPBuffer'
-let g:ctrlp_custom_ignore='\v[\/](node_modules|target|dist|\.git)|(\.(swp|ico|gif|svn))$'
+set noswapfile
 
 " vim-rest-console settings
 let g:vrc_auto_format_response_patterns = {
@@ -338,6 +352,7 @@ let g:vrc_curl_opts = {
   \ '-sS': '',
   \ '--connect-timeout': 10,
   \ '-i': '',
+  \ '--http1.1': '',
   \ '--max-time': 60,
   \ '-k': '',
 \}
@@ -363,6 +378,16 @@ endfunction
 
 command! -bang -nargs=? Gco :execute s:GCheckout(<q-args>)
 
+command! -bang -nargs=* RipGrep
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   <bang>0)
+
+nnoremap <C-p> :Files<Cr>
+nnoremap <C-e> :RipGrep<Cr>
+
 " Echodoc
 set cmdheight=2
 set signcolumn=yes
@@ -375,7 +400,6 @@ let g:ale_fixers = {
 let g:airline#extensions#ale#enabled = 1
 
 nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
-set foldmethod=manual
 
 " ==== fzf.vim =============================================
 function! s:open_branch_fzf(line)
@@ -405,12 +429,26 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_highlight_variable_assignments = 1
 let g:go_highlight_function_parameters = 1
+let g:go_gopls_enable = 0
 
 set nobackup nowritebackup
 
-" Rogu
-function! s:Rogu(args) abort
-  execute ':terminal rogu' a:args
+" kube
+function! s:Kubectl(args) abort
+    execute ':new | r!kubectl' a:args
+    execute ':setlocal bt=nofile'
+    execute ':setlocal hidden'
+    execute ':setlocal noma'
 endfunction
 
-com! -nargs=? Rg :execute s:Rogu(<q-args>)
+com! -nargs=? K :execute s:Kubectl(<q-args>)
+
+" -- vim-scala -------
+au BufRead,BufNewFile *.sbt set filetype=scala
+
+" -- vim-orgmode -----
+let g:org_agenda_files=["~/org/index.org", "~/org/projects.org"]
+
+let g:vimspector_enable_mappings = 'HUMAN'
+
+set colorcolumn=80
