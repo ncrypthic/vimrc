@@ -167,8 +167,8 @@ set hlsearch
 
 syntax on
 set background=dark
-"Enable this on iTerm2
 "set termguicolors
+"let g:solarized_termcolors=256
 colorscheme solarized8_high
 
 set mouse=a
