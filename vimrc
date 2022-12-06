@@ -3,8 +3,13 @@
 
 " Gotta be first
 "scriptencoding utf-8
-"set encoding=utf-8
+set encoding=UTF-8
 set nocompatible
+set nobackup
+set nowritebackup
+set backupcopy=no
+set noswapfile
+set noundofile
 
 filetype off
 
@@ -17,23 +22,25 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'tomasr/molokai'
 Plugin 'bling/vim-airline'
+Plugin 'ryanoasis/vim-devicons'
 
 " ----- Vim as a programmer's text editor -----------------------------
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'neoclide/coc.nvim'
+Plugin 'antoinemadec/coc-fzf'
 Plugin 'xolox/vim-misc'
-Plugin 'majutsushi/tagbar'
+"Plugin 'majutsushi/tagbar'
 Plugin 'vim-scripts/a.vim'
 Plugin 'diepm/vim-rest-console'
 "Plugin 'autozimu/LanguageClient-neovim'
 Plugin 'Shougo/echodoc'
-Plugin 'dense-analysis/ale'
-Plugin 'neoclide/coc.nvim'
+"Plugin 'dense-analysis/ale'
 Plugin 'liuchengxu/vista.vim'
-Plugin 'neovimhaskell/haskell-vim'
 Plugin 'tpope/vim-speeddating'
 Plugin 'puremourning/vimspector'
+Plugin 'neovimhaskell/haskell-vim'
 
 " ----- Snipets  ------------------------------------------------------
 
@@ -56,16 +63,12 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'scrooloose/vim-slumlord'
 Plugin 'aklt/plantuml-syntax'
 Plugin 'aserebryakov/vim-todo-lists'
+Plugin 'jacquesbh/vim-showmarks'
 
 
 " ----- man pages, tmux -----------------------------------------------
 Plugin 'jez/vim-superman'
 Plugin 'christoomey/vim-tmux-navigator'
-
-" ----- Syntax plugins ------------------------------------------------
-Plugin 'jez/vim-c0'
-Plugin 'jez/vim-ispc'
-Plugin 'kchmck/vim-coffee-script'
 
 " ----- Symfony Stuffs ------------------------------------------------
 
@@ -96,13 +99,13 @@ Plugin 'joonty/vdebug'
 " ---- Shell integration ---------------------------------------------
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell'
+Plugin 'roxma/nvim-yarp'
+Plugin 'roxma/vim-hug-neovim-rpc'
 
 " ---- PHP Extended Autocomplete -------------------------------------
 
-Plugin 'phpactor/phpactor'
-Plugin 'Shougo/unite.vim'
-Plugin 'roxma/nvim-yarp'
-Plugin 'roxma/vim-hug-neovim-rpc'
+"Plugin 'phpactor/phpactor'
+"Plugin 'Shougo/unite.vim'
 
 " ---- Capture -------------------------------------------------------
 
@@ -149,9 +152,10 @@ Plugin 'thosakwe/vim-flutter'
 
 " ---- Productivity Support ------------------------------------------
 
-Plugin 'jceb/vim-orgmode'
+"Plugin 'jceb/vim-orgmode'
 Plugin 'xolox/vim-notes'
 Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'farseer90718/vim-taskwarrior'
 
 call vundle#end()
 
@@ -167,7 +171,7 @@ set hlsearch
 
 syntax on
 set background=dark
-"set termguicolors
+set termguicolors
 "let g:solarized_termcolors=256
 colorscheme solarized8_high
 
@@ -175,12 +179,14 @@ set mouse=a
 set updatetime=300
 set shortmess+=c
 
+let g:snipMate = { 'snippet_version' : 1 }
+
 " ----- Plugin-Specific Settings --------------------------------------
 " Plugin 'xolox/vim-notes'
 "
 " let g:notes_directories=["~/notes"]
 
-" coc.nvim settings
+" ===== coc-nvim settings =============================================
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -219,17 +225,40 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+nmap <Leader>rn <Plug>(coc-rename)
+nmap <Leader>rf <Plug>(coc-refactor)
 
 " Map emoji
-nmap <leader>: :Unicodemoji<CR>
+nmap <Leader>: :Unicodemoji<CR>
 
-highlight CocHighlightText guibg=#777777 guifg=#ffff00
+" let s:code_actions = []
+
+" func! ActionMenuCodeActions() abort
+"   " if coc#util#has_float()
+"   "   call coc#util#float_hide()
+"   " endif
+
+"   let s:code_actions = CocAction('codeActions')
+"   let l:menu_items = map(copy(s:code_actions), { index, item -> item['title'] })
+"   call actionmenu#open(l:menu_items, 'ActionMenuCodeActionsCallback')
+" endfunc
+
+" func! ActionMenuCodeActionsCallback(index, item) abort
+"   if a:index >= 0
+"     let l:selected_code_action = s:code_actions[a:index]
+"     let l:response = CocAction('doCodeAction', l:selected_code_action)
+"   endif
+" endfunc
+
+nnoremap <silent> <Leader>\ :CocFzfList actions<CR>
+vnoremap <silent> <Leader>\ :CocFzfList actions<CR>
+
+highlight CocHighlightText guibg=#555555 guifg=#ffff00
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " ----- fugitive settings --------------
-nmap <leader>gpb  :execute ":Gpush origin " . fugitive#head(0)<CR>
+nmap <Leader>gpb  :execute ":Gpush origin " . fugitive#head(0)<CR>
 
 " ----- bling/vim-airline settings -----
 " Always show statusbar
@@ -240,7 +269,7 @@ set laststatus=2
 "     https://github.com/abertsch/Menlo-for-Powerline
 " download all the .ttf files, double-click on them and click "Install"
 " Finally, uncomment the next line
-"let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 
 " Show PASTE if in paste mode
 let g:airline_detect_paste=1
@@ -251,25 +280,14 @@ let g:airline#extensions#tabline#enabled = 1
 
 " ----- jistr/vim-nerdtree-tabs -----
 " Open/close NERDTree Tabs with \t
-nmap <silent> <leader>t :NERDTreeTabsToggle<CR>
+nmap <silent> <Leader>t :NERDTreeTabsToggle<CR>
 " To have NERDTree always open on startup
 let g:nerdtree_tabs_open_on_console_startup = 0
 let g:NERDTreeChDirMode = 2
 
-
-" ----- xolox/vim-easytags settings -----
-" Where to look for tags files
-set tags=./tags;,tags;
-" Sensible defaults
-let g:easytags_events = ['BufReadPost', 'BufWritePost']
-let g:easytags_async = 1
-let g:easytags_dynamic_files = 2
-let g:easytags_resolve_links = 1
-let g:easytags_suppress_ctags_warning = 1
-
 " ----- liuchengxu/vista.vim settings -----
 let g:vista_default_executive = 'coc'
-nmap <silent> <leader>b :Vista!!<CR>
+nmap <silent> <Leader>b :Vista!!<CR>
 
 
 " ----- airblade/vim-gitgutter settings -----
@@ -343,7 +361,7 @@ nnoremap <Leader>g :e#<CR>
 
 set noswapfile
 
-" vim-rest-console settings
+" ==== vim-rest-console ====================================
 let g:vrc_auto_format_response_patterns = {
   \ 'json': 'python3 -m json.tool',
   \ 'xml': 'xmllint --format -',
@@ -356,6 +374,17 @@ let g:vrc_curl_opts = {
   \ '--max-time': 60,
   \ '-k': '',
 \}
+
+" ==== Echodoc =============================================
+set cmdheight=2
+set signcolumn=yes
+let g:echodoc_enable_at_startup = 1
+
+" ==== ale =================================================
+" let g:ale_fixers = {
+" \   '*': ['remove_trailing_lines', 'trim_whitespace']
+" \}
+" let g:airline#extensions#ale#enabled = 1
 
 " ==== fzf.vim =============================================
 " FZF to checkout git branches, Usage: GCheckout
@@ -388,20 +417,6 @@ command! -bang -nargs=* RipGrep
 nnoremap <C-p> :Files<Cr>
 nnoremap <C-e> :RipGrep<Cr>
 
-" Echodoc
-set cmdheight=2
-set signcolumn=yes
-let g:echodoc_enable_at_startup = 1
-
-" ale
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace']
-\}
-let g:airline#extensions#ale#enabled = 1
-
-nmap <Leader>\ :call LanguageClient_contextMenu()<CR>
-
-" ==== fzf.vim =============================================
 function! s:open_branch_fzf(line)
   let l:parser = split(a:line)
   let l:branch = l:parser[0]
@@ -421,7 +436,7 @@ endfunction
 
 command! -bang -nargs=? Gco :execute s:GCheckout(<q-args>)
 
-" ------ vim-go -----------------------------------
+" ====== vim-go ===================================
 let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 1
 let g:go_highlight_types = 1
@@ -429,11 +444,8 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_highlight_variable_assignments = 1
 let g:go_highlight_function_parameters = 1
-let g:go_gopls_enable = 0
 
-set nobackup nowritebackup
-
-" kube
+" ====== kubectl ==================================
 function! s:Kubectl(args) abort
     execute ':new | r!kubectl' a:args
     execute ':setlocal bt=nofile'
@@ -443,12 +455,16 @@ endfunction
 
 com! -nargs=? K :execute s:Kubectl(<q-args>)
 
-" -- vim-scala -------
+" ====== vim=go ===================================
 au BufRead,BufNewFile *.sbt set filetype=scala
 
-" -- vim-orgmode -----
+" ====== vim-orgmode ==============================
 let g:org_agenda_files=["~/org/index.org", "~/org/projects.org"]
 
 let g:vimspector_enable_mappings = 'HUMAN'
 
 set colorcolumn=80
+
+command -nargs=0 Todo edit ~/.todo.md
+
+imap <C-R><TAB> <Plug>snipMateNextOrTrigger
